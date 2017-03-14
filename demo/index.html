@@ -25,7 +25,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../headers-list-view.html">
 
   <style is="custom-style" include="demo-pages-shared-styles">
+    :root {
+      /* From the API console styles */
+      --arc-font-common-base: {
+        font-family: 'Roboto', 'Noto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      };
 
+      --arc-font-common-code: {
+        font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+        -webkit-font-smoothing: antialiased;
+      };
+
+      --arc-font-code1: {
+        @apply(--arc-font-common-code);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+      };
+    }
     .vertical-section-container {
       max-width: 600px;
     }
@@ -42,7 +60,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <script>
         var headers = 'Content-Type: application-json\n';
         headers += 'Content-Length: 256\n';
-        headers += 'Content-Encoding: gzip';
+        headers += 'Content-Encoding: gzip\n';
+        headers += 'x-server: x-abc.zone-europe-a.domain.company.com';
         document.querySelector('headers-list-view').headers = headers;
         </script>
       </template>
