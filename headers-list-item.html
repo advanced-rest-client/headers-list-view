@@ -28,13 +28,15 @@ This element will imitate paper-item but without using flex layout.
 <dom-module id="headers-list-item">
   <template>
     <style include="paper-item-shared-styles">
-    :host {
-      min-height: var(--headers-list-item-min-height, 24px);
+     :host {
+      min-height: var(--headers-list-item-min-height, 20px);
       -webkit-user-select: text;
+      word-break: break-word;
+      @apply(--arc-font-code1);
       @apply(--layout-horizontal);
-      @apply(--layout-center);
       @apply(--headers-list-item);
     }
+
     headers-list-item-value {
       margin-left: 8px;
     }
