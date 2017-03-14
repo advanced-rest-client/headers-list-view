@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/advanced-rest-client/headers-list-view.svg?branch=master)](https://travis-ci.org/advanced-rest-client/headers-list-view)  
+[![Build Status](https://travis-ci.org/advanced-rest-client/headers-list-view.svg?branch=stage)](https://travis-ci.org/advanced-rest-client/headers-list-view)  
 
 # headers-list-view
 
