@@ -52,6 +52,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var disply = Polymer.dom(element.root).querySelector('#display');
         assert.equal(disply.innerHTML, html);
       });
+
+      test('Should parse link ', function() {
+        var link = '<http://localhost:8080/pimexport/products?page=2>;rel="next";';
+        var compare = '&lt;<a target="_blank" class="auto-link" ' +
+          'href="http://localhost:8080/pimexport/products?page=2">' +
+          'http://localhost:8080/pimexport/products?page=2</a>&gt;;rel="next";';
+        var result = element._autoLink(link);
+        assert.equal(result, compare);
+      });
     });
     </script>
 

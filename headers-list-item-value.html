@@ -71,20 +71,29 @@ Polymer({
       this.$.display.innerHTML = '';
       return;
     }
-    this.$.display.innerHTML = this._autoLink(this._encodeHtml(value));
-  },
-  // Encodes HTML entities
-  _encodeHtml: function(input) {
-    if (typeof input !== 'string') {
-      return input;
-    }
-    return input.replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+    this.$.display.innerHTML = this._autoLink(value);
   },
   // Finds URLs in input string and adds anchors tags.
   _autoLink: function(input) {
+    if (typeof input !== 'string') {
+      return input;
+    }
     var r = new RegExp('(https?:\\/\\/([^" >]*))', 'gim');
-    return input.replace(r, '<a target="_blank" class="auto-link" href="$1">$1</a>');
+    var matches = input.match(r);
+    input = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (!matches) {
+      return input;
+    }
+    var index = input.indexOf(matches[0]);
+    var result = input.substr(0, index);
+    result += '<a target="_blank" class="auto-link" href="';
+    result += matches[0];
+    result += '">';
+    result += matches[0];
+    result += '</a>';
+    index += matches[0].length;
+    result += input.substr(index);
+    return result;
   }
 
 });
