@@ -1,24 +1,12 @@
 <!doctype html>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
     <script src="../../iron-test-helpers/test-helpers.js"></script>
     <script src="../../iron-test-helpers/mock-interactions.js"></script>
-
-    <!-- Step 1: import the element to test -->
     <link rel="import" href="../headers-list-view.html">
   </head>
   <body>
@@ -30,7 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
-    var HAS_NEW_MOUSE = (function() {
+    var HAS_NEW_MOUSE = (() => {
       var has = false;
       try {
         has = Boolean(new MouseEvent('x'));
@@ -76,42 +64,85 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       node.dispatchEvent(e);
     }
 
-    /* global suite, test, fixture, expect, MockInteractions, TestHelpers, sinon */
-    suite('basic', function() {
-      var element;
-      var clickHandler;
-      var headers;
-      setup(function() {
+    /* global flush, MockInteractions */
+    suite('Rendering the list', () => {
+      let element;
+      let headers;
+      setup(() => {
         element = fixture('basic');
         headers = 'Content-Type: application-json\n';
         headers += 'Content-Length: 256\n';
         headers += 'Content-Encoding: gzip';
       });
 
-      test('Should parse headers', function() {
-        element.headers = headers;
-        TestHelpers.forceXIfStamp(element);
-        expect(element._headers).to.be.array;
-        expect(element._headers).to.have.lengthOf(3);
+      test('container is the list container', (done) => {
+        flush(() => {
+          const result = element.container;
+          assert.ok(result);
+          done();
+        });
       });
 
-      test('Double click triggers event', function(done) {
-        clickHandler = sinon.spy();
-        element.addEventListener('query-headers', clickHandler);
+      test('Renders headers list', () => {
         element.headers = headers;
-        TestHelpers.forceXIfStamp(element);
+        const result = element.shadowRoot.querySelectorAll('.container .list-item');
+        assert.equal(result.length, 3);
+      });
 
-        var item = Polymer.dom(element.root).querySelector('headers-list-item');
-        var xy = MockInteractions.middleOfNode(item);
-        makeMouseEvent('dblclick', xy, item);
-
-        Polymer.Base.async(function() {
-          expect(clickHandler.callCount).to.be.equal(1);
+      test('Double click triggers query-headers event', function(done) {
+        element.addEventListener('query-headers', function clb(e) {
+          element.removeEventListener('query-headers', clb);
+          const result = e.detail;
+          assert.equal(result.query, 'content-type');
+          assert.equal(result.type, 'response');
           done();
-        }, 1);
+        });
+        element.headers = headers;
+        const item = element.shadowRoot.querySelector('.container .list-item');
+        const xy = MockInteractions.middleOfNode(item);
+        makeMouseEvent('dblclick', xy, item);
+      });
+
+      test('Re-renders the list', () => {
+        element.headers = headers;
+        let result = element.shadowRoot.querySelectorAll('.container .list-item');
+        assert.equal(result.length, 3);
+        element.headers = 'accept: application/json';
+        result = element.shadowRoot.querySelectorAll('.container .list-item');
+        assert.equal(result.length, 1);
+      });
+    });
+
+    suite('Links discovery', () => {
+      let element;
+      suiteSetup(() => {
+        element = fixture('basic');
+      });
+
+      test('Finds a link', () => {
+        const header = '<link href="http://domain.com">';
+        let compare = '&lt;link href="<a target="_blank" class="auto-link" ';
+        compare += 'href="http://domain.com">http://domain.com</a>"&gt;';
+        const result = element._autoLink(header);
+        assert.equal(result, compare);
+      });
+
+      test('Ignores incoplete urls', () => {
+        const header = '<link href="domain.com">';
+        const compare = '&lt;link href="domain.com"&gt;';
+        const result = element._autoLink(header);
+        assert.equal(result, compare);
+      });
+
+      test('Parses complex location value', () => {
+        const header = '<http://localhost:8080/pimexport/products?page=2>;rel="next";';
+        const compare = '&lt;<a target="_blank" class="auto-link" ' +
+          'href="http://localhost:8080/pimexport/products?page=2">' +
+          'http://localhost:8080/pimexport/products?page=2</a>&gt;;rel="next";';
+        const result = element._autoLink(header);
+        assert.equal(result, compare);
       });
     });
     </script>
-
   </body>
 </html>
