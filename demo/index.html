@@ -25,7 +25,7 @@
       };
 
       --arc-font-code1: {
-        @apply(--arc-font-common-code);
+        @apply --arc-font-common-code;
         font-size: 14px;
         font-weight: 500;
         line-height: 20px;
@@ -46,7 +46,10 @@
         headers += 'Content-Length: 256\n';
         headers += 'Content-Encoding: gzip\n';
         headers += 'x-server: x-abc.zone-europe-a.domain.company.com\n';
-        headers += 'location: https://domain.com/path';
+        headers += 'location: https://domain.com/path \n';
+        headers += 'x-code: 515508e2165549de8012ebfc369c70ae515508e2165549';
+        headers += 'de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae5155';
+        headers += '08e2165549de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae';
         document.querySelector('headers-list-view').headers = headers;
         </script>
       </template>
