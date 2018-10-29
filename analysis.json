@@ -8,11 +8,11 @@
       "properties": [
         {
           "name": "isPayload",
-          "type": "boolean",
+          "type": "boolean | null | undefined",
           "description": "Set to true when the request can carry a payload.\nIt's required for calculating headers errors.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
               "line": 56,
               "column": 8
@@ -23,13 +23,36 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "Boolean"
+            }
           },
           "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
         },
         {
+          "name": "container",
+          "type": "HTMLElement",
+          "description": "Returns a reference to main container of the list.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 163,
+              "column": 4
+            },
+            "end": {
+              "line": 174,
+              "column": 5
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
           "name": "headers",
-          "type": "string",
+          "type": "string | null | undefined",
           "description": "A HTTP headers to display.",
           "privacy": "public",
           "sourceRange": {
@@ -44,7 +67,8 @@
           },
           "metadata": {
             "polymer": {
-              "observer": "\"_headersChanged\""
+              "observer": "\"_headersChanged\"",
+              "attributeType": "String"
             }
           }
         },
@@ -64,12 +88,14 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "Array"
+            }
           }
         },
         {
           "name": "type",
-          "type": "string",
+          "type": "string | null | undefined",
           "description": "Type of the header.\nCan be either `request` or `response`.\nIt is required for displaying the help for the headers. The element\nfires the `query-headers` event on double click which requires this\ninformation to be set.",
           "privacy": "public",
           "sourceRange": {
@@ -83,13 +109,15 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "String"
+            }
           },
           "defaultValue": "\"response\""
         },
         {
           "name": "_hdTitle",
-          "type": "string",
+          "type": "string | null | undefined",
           "description": "Header title in the details dialog.",
           "privacy": "protected",
           "sourceRange": {
@@ -103,12 +131,14 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "String"
+            }
           }
         },
         {
           "name": "_hdBody",
-          "type": "string",
+          "type": "string | null | undefined",
           "description": "Header description in the details dialog.",
           "privacy": "protected",
           "sourceRange": {
@@ -122,12 +152,14 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "String"
+            }
           }
         },
         {
           "name": "_hdExample",
-          "type": "string",
+          "type": "string | null | undefined",
           "description": "Header example in the details dialog.",
           "privacy": "protected",
           "sourceRange": {
@@ -141,7 +173,9 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "String"
+            }
           }
         },
         {
@@ -160,7 +194,9 @@
             }
           },
           "metadata": {
-            "polymer": {}
+            "polymer": {
+              "attributeType": "Object"
+            }
           }
         }
       ],
@@ -170,7 +206,7 @@
           "description": "Filter array of headers and return not duplicated array of the same headers.\nDuplicated headers should be appended to already found one using coma separator.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
               "line": 69,
               "column": 4
@@ -199,13 +235,13 @@
           "description": "Parse headers array to Raw HTTP headers string.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
               "line": 96,
               "column": 4
             },
             "end": {
-              "line": 122,
+              "line": 110,
               "column": 5
             }
           },
@@ -224,17 +260,46 @@
           "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
         },
         {
+          "name": "headerItemToString",
+          "description": "Transforms a header model item to a string.\nArray values are supported.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 118,
+              "column": 4
+            },
+            "end": {
+              "line": 132,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "header",
+              "type": "Object",
+              "description": "Object with name and value."
+            }
+          ],
+          "return": {
+            "type": "String",
+            "desc": "Generated headers line"
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
           "name": "headersToJSON",
           "description": "Parse HTTP headers input from string to array of objects containing `name` and `value`\nproperties.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 131,
+              "line": 142,
               "column": 4
             },
             "end": {
-              "line": 137,
+              "line": 148,
               "column": 5
             }
           },
@@ -257,13 +322,13 @@
           "description": "Parse headers string to array of objects.\nSee `#toJSON` for more info.",
           "privacy": "protected",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 142,
+              "line": 153,
               "column": 4
             },
             "end": {
-              "line": 174,
+              "line": 185,
               "column": 5
             }
           },
@@ -280,13 +345,13 @@
           "description": "Parse Headers object to array of objects.\nSee `#toJSON` for more info.",
           "privacy": "protected",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 179,
+              "line": 190,
               "column": 4
             },
             "end": {
-              "line": 202,
+              "line": 213,
               "column": 5
             }
           },
@@ -303,13 +368,13 @@
           "description": "Helper method for old system: combine headers list with encoding value.\nNote that this function will update the original array.",
           "privacy": "protected",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 212,
+              "line": 223,
               "column": 4
             },
             "end": {
-              "line": 226,
+              "line": 237,
               "column": 5
             }
           },
@@ -337,13 +402,13 @@
           "description": "Get the Content-Type value from the headers.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 234,
+              "line": 245,
               "column": 4
             },
             "end": {
-              "line": 255,
+              "line": 266,
               "column": 5
             }
           },
@@ -366,13 +431,13 @@
           "description": "Replace value for given header in the headers list.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 266,
+              "line": 277,
               "column": 4
             },
             "end": {
-              "line": 300,
+              "line": 311,
               "column": 5
             }
           },
@@ -405,13 +470,13 @@
           "description": "Get error message for given header string.",
           "privacy": "public",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
-              "line": 306,
+              "line": 317,
               "column": 4
             },
             "end": {
-              "line": 340,
+              "line": 351,
               "column": 5
             }
           },
@@ -450,7 +515,10 @@
               "type": "String",
               "description": "Headers to render"
             }
-          ]
+          ],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "_clearList",
@@ -467,7 +535,10 @@
             }
           },
           "metadata": {},
-          "params": []
+          "params": [],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "_getMarkup",
@@ -515,7 +586,10 @@
             {
               "name": "e"
             }
-          ]
+          ],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "_headersQueryEvent",
@@ -570,7 +644,10 @@
               "type": "String",
               "description": "Event label"
             }
-          ]
+          ],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "_autoLink",
@@ -620,7 +697,7 @@
           "name": "is-payload",
           "description": "Set to true when the request can carry a payload.\nIt's required for calculating headers errors.",
           "sourceRange": {
-            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "file": "../headers-parser-behavior/headers-parser-behavior.html",
             "start": {
               "line": 56,
               "column": 8
@@ -631,7 +708,7 @@
             }
           },
           "metadata": {},
-          "type": "boolean",
+          "type": "boolean | null | undefined",
           "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
         },
         {
@@ -648,7 +725,7 @@
             }
           },
           "metadata": {},
-          "type": "string"
+          "type": "string | null | undefined"
         },
         {
           "name": "type",
@@ -664,7 +741,7 @@
             }
           },
           "metadata": {},
-          "type": "string"
+          "type": "string | null | undefined"
         }
       ],
       "events": [],
