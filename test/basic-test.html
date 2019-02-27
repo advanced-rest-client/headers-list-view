@@ -3,11 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
-    <script src="../../iron-test-helpers/test-helpers.js"></script>
-    <script src="../../iron-test-helpers/mock-interactions.js"></script>
-    <link rel="import" href="../headers-list-view.html">
+
+    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
   </head>
   <body>
 
@@ -17,9 +19,11 @@
       </template>
     </test-fixture>
 
-    <script>
-    var HAS_NEW_MOUSE = (() => {
-      var has = false;
+    <script type="module">
+    import '../headers-list-view.js';
+    import {middleOfNode} from '@polymer/iron-test-helpers/mock-interactions.js';
+    const HAS_NEW_MOUSE = (() => {
+      let has = false;
       try {
         has = Boolean(new MouseEvent('x'));
       } catch (_) {}
@@ -34,7 +38,7 @@
      * @param {!Element} node The node to fire the event on.
      */
     function makeMouseEvent(type, xy, node) {
-      var props = {
+      const props = {
         bubbles: true,
         cancelable: true,
         clientX: xy.x,
@@ -42,29 +46,28 @@
         // Make this a primary input.
         buttons: 1 // http://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/buttons
       };
-      var e;
+      let e;
       if (HAS_NEW_MOUSE) {
         e = new MouseEvent(type, props);
       } else {
         e = document.createEvent('MouseEvent');
         e.initMouseEvent(
           type, props.bubbles, props.cancelable,
-          null, /* view */
-          null, /* detail */
-          0,    /* screenX */
-          0,    /* screenY */
+          null,
+          null,
+          0,
+          0,
           props.clientX, props.clientY,
-          false, /*ctrlKey */
-          false, /*altKey */
-          false, /*shiftKey */
-          false, /*metaKey */
-          0,     /*button */
-          null   /*relatedTarget*/);
+          false,
+          false,
+          false,
+          false,
+          0,
+          null);
       }
       node.dispatchEvent(e);
     }
 
-    /* global flush, MockInteractions */
     suite('Rendering the list', () => {
       let element;
       let headers;
@@ -99,7 +102,7 @@
         });
         element.headers = headers;
         const item = element.shadowRoot.querySelector('.container .list-item');
-        const xy = MockInteractions.middleOfNode(item);
+        const xy = middleOfNode(item);
         makeMouseEvent('dblclick', xy, item);
       });
 

@@ -5,11 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>headers-list-view demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../arc-definitions/arc-definitions.html">
-  <link rel="import" href="../headers-list-view.html">
+  <script src="../../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+  <script type="module" src="../../../@advanced-rest-client/arc-definitions/arc-definitions.js"></script>
+  <script type="module" src="../headers-list-view.js"></script>
+
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
     :root {
@@ -37,7 +38,7 @@
 <body unresolved>
   <arc-definitions></arc-definitions>
   <div class="vertical-section-container centered">
-    <h3>The `headers-list-view`</h3>
+    <h3>The headers-list-view</h3>
     <demo-snippet>
       <template>
         <headers-list-view></headers-list-view>
