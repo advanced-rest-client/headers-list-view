@@ -11,13 +11,13 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import '@polymer/polymer/lib/elements/dom-repeat.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js';
-import '@polymer/paper-button/paper-button.js';
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
+import {HeadersParserMixin} from '../../@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import '../../@polymer/polymer/lib/elements/dom-repeat.js';
+import '../../@polymer/paper-dialog/paper-dialog.js';
+import '../../@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js';
+import '../../@polymer/paper-button/paper-button.js';
 /**
  * An element that displays a list of headers.
  *
