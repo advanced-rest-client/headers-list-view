@@ -5,40 +5,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
   <title>headers-list-view demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../arc-definitions/arc-definitions.html">
-  <link rel="import" href="../headers-list-view.html">
-  <custom-style>
-    <style is="custom-style" include="demo-pages-shared-styles">
-    :root {
-      /* From the API console styles */
-      --arc-font-common-base: {
-        font-family: 'Roboto', 'Noto', sans-serif;
-        -webkit-font-smoothing: antialiased;
-      };
 
-      --arc-font-common-code: {
-        font-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
-        -webkit-font-smoothing: antialiased;
-      };
-
-      --arc-font-code1: {
-        @apply --arc-font-common-code;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 20px;
-      };
+  <style>
+    html {
+      --arc-font-body1-font-size: 14px;
+      --arc-font-body1-font-weight: 400;
+      --arc-font-body1-line-height: 20px;
+      --arc-font-body2-font-size: 14px;
+      --arc-font-body2-font-weight: 500;
+      --arc-font-body2-line-height: 24px;
+      --arc-font-code-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+      --link-color: #00A1DF;
     }
-    </style>
-  </custom-style>
+  </style>
 </head>
-<body unresolved>
+<body class="styled">
   <arc-definitions></arc-definitions>
   <div class="vertical-section-container centered">
-    <h3>The `headers-list-view`</h3>
-    <demo-snippet>
+    <h3>The headers-list-view</h3>
+    <arc-demo-helper>
       <template>
         <headers-list-view></headers-list-view>
         <script>
@@ -49,11 +34,13 @@
         headers += 'location: https://domain.com/path \n';
         headers += 'x-code: 515508e2165549de8012ebfc369c70ae515508e2165549';
         headers += 'de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae5155';
-        headers += '08e2165549de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae';
+        headers += '08e2165549de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae515508e2165549de8012ebfc369c70ae\n';
+        headers += 'Link: <https://example.com>; rel="preload"';
         document.querySelector('headers-list-view').headers = headers;
         </script>
       </template>
-    </demo-snippet>
+    </arc-demo-helper>
   </div>
+  <script type="module" src="./index.js"></script>
 </body>
 </html>

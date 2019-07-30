@@ -5,15 +5,16 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   headers-list-view.html
+ *   headers-list-view.js
  */
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/elements/dom-repeat.d.ts" />
-/// <reference path="../paper-dialog/paper-dialog.d.ts" />
-/// <reference path="../paper-dialog-scrollable/paper-dialog-scrollable.d.ts" />
-/// <reference path="../headers-parser-behavior/headers-parser-behavior.d.ts" />
-/// <reference path="../paper-button/paper-button.d.ts" />
+
+// tslint:disable:variable-name Describing an API that's defined elsewhere.
+// tslint:disable:no-any describes the API as best we are able today
+
+import {LitElement, html, css} from 'lit-element';
+
+import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 
 declare namespace UiElements {
 
@@ -47,13 +48,8 @@ declare namespace UiElements {
    * `--arc-link` | Mixin applied to a link | `{}`
    */
   class HeadersListView extends
-    ArcBehaviors.HeadersParserBehavior(
+    HeadersParserMixin(
     Object) {
-
-    /**
-     * Returns a reference to main container of the list.
-     */
-    readonly container: HTMLElement|null;
 
     /**
      * A HTTP headers to display.
@@ -63,7 +59,7 @@ declare namespace UiElements {
     /**
      * Parsed headers to the array of headers.
      */
-    _headers: Array<object|null>|null;
+    _headersList: Array<object|null>|null;
 
     /**
      * Type of the header.
@@ -93,6 +89,8 @@ declare namespace UiElements {
      * A regexp used to match links in headers string.
      */
     _linkR: RegExp|null;
+    _listTemplate(headers: any): any;
+    render(): any;
 
     /**
      * The list view requires to add some markup dynamically therefore it cannot
@@ -104,23 +102,10 @@ declare namespace UiElements {
     _headersChanged(headers: String|null): void;
 
     /**
-     * Clears the list of headers.
-     */
-    _clearList(): void;
-
-    /**
-     * Creates a markup for a list item.
-     *
-     * @param item Headers model item.
-     * @returns Markup for list item.
-     */
-    _getMarkup(item: object|null): String|null;
-
-    /**
      * Double click on header line handler.
      * Will call model for data to display.
      */
-    _displayHeaderInfo(e: any): void;
+    _displayHeaderInfo(e: CustomEvent|null): void;
 
     /**
      * Dispatches `query-headers` custom event handled by `arc-definitions`
@@ -146,6 +131,9 @@ declare namespace UiElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "headers-list-view": UiElements.HeadersListView;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "headers-list-view": UiElements.HeadersListView;
+  }
 }
