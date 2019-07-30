@@ -20,6 +20,10 @@ document.querySelector('headers-list-view').headers = headers;
 </script>
 ```
 
+You can put `@advanced-rest-client/arc-definitions` element into dom to enable interactive list.
+When the user double click on the list item it dispatches headers query event and `arc-definitions` responds to his query.
+If the headers details are available it renders a dialog with header description.
+
 ### API components
 
 This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
@@ -41,9 +45,25 @@ npm install --save @advanced-rest-client/headers-list-view
     </script>
   </head>
   <body>
-    <headers-list-view></headers-list-view>
+    <headers-list-view headers="..."></headers-list-view>
   </body>
 </html>
+```
+
+### In a LitElement
+
+```js
+import { LitElement, html } from 'lit-element';
+import '@advanced-rest-client/headers-list-view/headers-list-view.js';
+
+class SampleElement extends PolymerElement {
+  render() {
+    return html`
+    <headers-list-view .headers="${this.headers}"></headers-list-view>
+    `;
+  }
+}
+customElements.define('sample-element', SampleElement);
 ```
 
 ### In a Polymer 3 element
@@ -55,7 +75,7 @@ import '@advanced-rest-client/headers-list-view/headers-list-view.js';
 class SampleElement extends PolymerElement {
   static get template() {
     return html`
-    <headers-list-view></headers-list-view>
+    <headers-list-view headers="[[headers]]"></headers-list-view>
     `;
   }
 
@@ -70,19 +90,18 @@ customElements.define('sample-element', SampleElement);
 
 ```sh
 git clone https://github.com/advanced-rest-client/headers-list-view
-cd api-url-editor
+cd headers-list-view
 npm install
-npm install -g polymer-cli
 ```
 
 ### Running the demo locally
 
 ```sh
-polymer serve --npm
-open http://127.0.0.1:<port>/demo/
+npm start
 ```
 
 ### Running the tests
+
 ```sh
-polymer test --npm
+npm test
 ```

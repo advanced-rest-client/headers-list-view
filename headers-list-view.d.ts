@@ -12,9 +12,7 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+import {LitElement, html, css} from 'lit-element';
 
 import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 
@@ -54,11 +52,6 @@ declare namespace UiElements {
     Object) {
 
     /**
-     * Returns a reference to main container of the list.
-     */
-    readonly container: HTMLElement|null;
-
-    /**
      * A HTTP headers to display.
      */
     headers: string|null|undefined;
@@ -66,7 +59,7 @@ declare namespace UiElements {
     /**
      * Parsed headers to the array of headers.
      */
-    _headers: Array<object|null>|null;
+    _headersList: Array<object|null>|null;
 
     /**
      * Type of the header.
@@ -96,6 +89,8 @@ declare namespace UiElements {
      * A regexp used to match links in headers string.
      */
     _linkR: RegExp|null;
+    _listTemplate(headers: any): any;
+    render(): any;
 
     /**
      * The list view requires to add some markup dynamically therefore it cannot
@@ -105,19 +100,6 @@ declare namespace UiElements {
      * @param headers Headers to render
      */
     _headersChanged(headers: String|null): void;
-
-    /**
-     * Clears the list of headers.
-     */
-    _clearList(): void;
-
-    /**
-     * Creates a markup for a list item.
-     *
-     * @param item Headers model item.
-     * @returns Markup for list item.
-     */
-    _getMarkup(item: object|null): String|null;
 
     /**
      * Double click on header line handler.

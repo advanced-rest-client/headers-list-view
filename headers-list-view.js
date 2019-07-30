@@ -11,13 +11,11 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
-import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
-import {HeadersParserMixin} from '../../@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import '../../@polymer/polymer/lib/elements/dom-repeat.js';
-import '../../@polymer/paper-dialog/paper-dialog.js';
-import '../../@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js';
-import '../../@polymer/paper-button/paper-button.js';
+import { LitElement, html, css } from 'lit-element';
+import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js';
+import '@polymer/paper-button/paper-button.js';
 /**
  * An element that displays a list of headers.
  *
@@ -53,29 +51,30 @@ import '../../@polymer/paper-button/paper-button.js';
  * @appliesMixin HeadersParserMixin
  * @memberof UiElements
  */
-class HeadersListView extends HeadersParserMixin(PolymerElement) {
-  static get template() {
-    return html`
-    <style>
-    :host {
+class HeadersListView extends HeadersParserMixin(LitElement) {
+  static get styles() {
+    return css`:host {
       display: block;
-      @apply --headers-list-view;
+      font-size: var(--arc-font-body1-font-size);
+      font-weight: var(--arc-font-body1-font-weight);
+      line-height: var(--arc-font-body1-line-height);
     }
 
     .dialog-header-example {
-      @apply --arc-font-body1;
       margin-top: 16px;
     }
 
     .dialog-header-desc {
-      @apply --arc-font-body2;
+      font-size: var(--arc-font-body2-font-size);
+      font-weight: var(--arc-font-body2-font-weight);
+      line-height: var(--arc-font-body2-line-height);
     }
 
     .list-item {
       min-height: var(--headers-list-item-min-height, 20px);
-      -webkit-user-select: text;
+      user-select: text;
       word-break: break-all;
-      @apply --arc-font-code1;
+      font-family: var(--arc-font-code-family);
     }
 
     .list-item > span {
@@ -87,44 +86,51 @@ class HeadersListView extends HeadersParserMixin(PolymerElement) {
     }
 
     .auto-link {
-      @apply --arc-link;
-    }
-    </style>
-    <div class="container" on-dblclick="_displayHeaderInfo"></div>
+      color: var(--link-color);
+    }`;
+  }
+
+  _listTemplate(headers) {
+    return html`<div class="container" @dblclick="${this._displayHeaderInfo}">
+    ${headers.map((item) => html`<div class="list-item" data-name="${item.name}">
+      <span class="header-name">${item.name}:</span>
+      <span class="header-value">${this._autoLink(item.value)}</span>
+    </div>`)}
+    </div>`;
+  }
+
+  render() {
+    const { _hdTitle, _hdBody, _hdExample, _headersList } = this;
+    const hasList = !!(_headersList && _headersList.length);
+    return html`
+    ${hasList ? this._listTemplate(_headersList) : undefined}
     <paper-dialog id="headerInfo">
-      <h2>[[_hdTitle]]</h2>
+      <h2>${_hdTitle}</h2>
       <paper-dialog-scrollable>
-        <section class="dialog-header-desc">[[_hdBody]]</section>
+        <section class="dialog-header-desc">${_hdBody}</section>
         <section class="dialog-header-example">
           <span>Example:</span>
-          <span>[[_hdExample]]</span>
+          <span>${_hdExample}</span>
         </section>
       </paper-dialog-scrollable>
       <div class="buttons">
-        <paper-button dialog-confirm="" autofocus="">Close</paper-button>
+        <paper-button dialog-confirm autofocus>Close</paper-button>
       </div>
-    </paper-dialog>
-`;
+    </paper-dialog>`;
   }
 
-  static get is() {
-    return 'headers-list-view';
-  }
   static get properties() {
     return {
       /**
        * A HTTP headers to display.
        */
-      headers: {
-        type: String,
-        observer: '_headersChanged'
-      },
+      headers: { type: String },
       /**
        * Parsed headers to the array of headers.
        *
        * @type {Array<Object>}
        */
-      _headers: Array,
+      _headersList: { type: Array },
       /**
        * Type of the header.
        * Can be either `request` or `response`.
@@ -132,52 +138,46 @@ class HeadersListView extends HeadersParserMixin(PolymerElement) {
        * fires the `query-headers` event on double click which requires this
        * information to be set.
        */
-      type: {
-        type: String,
-        value: 'response'
-      },
+      type: { type: String },
       /**
        * Header title in the details dialog.
        */
-      _hdTitle: String,
+      _hdTitle: { type: String },
       /**
        * Header description in the details dialog.
        */
-      _hdBody: String,
+      _hdBody: { type: String },
       /**
        * Header example in the details dialog.
        */
-      _hdExample: String,
+      _hdExample: { type: String },
       /**
        * A regexp used to match links in headers string.
        *
        * @type {RegExp}
        */
-      _linkR: {
-        type: Object,
-        value: function() {
-          return new RegExp('(https?:\\/\\/([^" >]*))', 'gim');
-        }
-      }
+      _linkR: { type: Object }
     };
   }
-  /**
-   * Returns a reference to main container of the list.
-   * @return {HTMLElement} List container.
-   */
-  get container() {
-    if (!this.shadowRoot) {
-      return;
-    }
-    if (!this.$) {
-      this.$ = {};
-    }
-    if (!this.$.container) {
-      this.$.container = this.shadowRoot.querySelector('.container');
-    }
-    return this.$.container;
+
+  get headers() {
+    return this._headers;
   }
 
+  set headers(value) {
+    const old = this._headers;
+    if (old === value) {
+      return;
+    }
+    this._headers = value;
+    this._headersChanged(value);
+  }
+
+  constructor() {
+    super();
+    this._linkR = /(https?:\/\/([^" >]*))/gim;
+    this.type = 'response';
+  }
   /**
    * The list view requires to add some markup dynamically therefore it cannot
    * use Polymer's replates and binding system.
@@ -186,34 +186,12 @@ class HeadersListView extends HeadersParserMixin(PolymerElement) {
    * @param {String} headers Headers to render
    */
   _headersChanged(headers) {
-    this._clearList();
     if (!headers) {
+      this._headersList = undefined;
       return;
     }
     const list = this.headersToJSON(headers);
-    const markup = list.map((item) => this._getMarkup(item)).join('\n');
-    this.container.innerHTML = markup;
-  }
-  /**
-   * Clears the list of headers.
-   */
-  _clearList() {
-    this.container.innerHTML = '';
-  }
-  /**
-   * Creates a markup for a list item.
-   * @param {Object} item Headers model item.
-   * @return {String} Markup for list item.
-   */
-  _getMarkup(item) {
-    let result = `<div class="list-item" data-name="${item.name}">`;
-    result += '<span class="header-name">';
-    result += item.name + ': </span>';
-    result += '<span class="header-value">';
-    result += this._autoLink(item.value);
-    result += '</span>';
-    result += '</div>';
-    return result;
+    this._headersList = list;
   }
   /**
    * Double click on header line handler.
@@ -224,7 +202,8 @@ class HeadersListView extends HeadersParserMixin(PolymerElement) {
   _displayHeaderInfo(e) {
     const path = e.composedPath();
     let target;
-    while (true) {
+    const test = true;
+    while (test) {
       target = path.shift();
       if (!target) {
         return;
@@ -241,7 +220,8 @@ class HeadersListView extends HeadersParserMixin(PolymerElement) {
       this._hdTitle = result.key;
       this._hdBody = result.desc;
       this._hdExample = result.example;
-      this.$.headerInfo.open();
+      const node = this.shadowRoot.querySelector('paper-dialog');
+      node.opened = true;
     }
     this._analyticsEvent('Headers list', 'Display header info dialog');
   }
@@ -290,20 +270,17 @@ class HeadersListView extends HeadersParserMixin(PolymerElement) {
       return input;
     }
     const matches = input.match(this._linkR);
-    input = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     if (!matches) {
       return input;
     }
     let index = input.indexOf(matches[0]);
-    let result = input.substr(0, index);
-    result += '<a target="_blank" class="auto-link" href="';
-    result += matches[0];
-    result += '">';
-    result += matches[0];
-    result += '</a>';
-    index += matches[0].length;
-    result += input.substr(index);
-    return result;
+    const start = input.substr(0, index);
+    const url = matches[0];
+    index += url.length;
+    const end = input.substr(index);
+
+    return html`${start}<a target="_blank"
+      class="auto-link" href="${url}">${url}</a>${end}`;
   }
 }
-window.customElements.define(HeadersListView.is, HeadersListView);
+window.customElements.define('headers-list-view', HeadersListView);
