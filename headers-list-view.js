@@ -13,9 +13,6 @@ the License.
 */
 import { LitElement, html, css } from 'lit-element';
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js';
-import '@polymer/paper-button/paper-button.js';
 /**
  * An element that displays a list of headers.
  *
@@ -91,32 +88,19 @@ class HeadersListView extends HeadersParserMixin(LitElement) {
   }
 
   _listTemplate(headers) {
-    return html`<div class="container" @dblclick="${this._displayHeaderInfo}">
-    ${headers.map((item) => html`<div class="list-item" data-name="${item.name}">
-      <span class="header-name">${item.name}:</span>
-      <span class="header-value">${this._autoLink(item.value)}</span>
-    </div>`)}
+    return html`<div class="container">
+      ${headers.map((item) => html`<div class="list-item" data-name="${item.name}">
+        <span class="header-name">${item.name}:</span>
+        <span class="header-value">${this._autoLink(item.value)}</span>
+      </div>`)}
     </div>`;
   }
 
   render() {
-    const { _hdTitle, _hdBody, _hdExample, _headersList } = this;
+    const { _headersList } = this;
     const hasList = !!(_headersList && _headersList.length);
     return html`
-    ${hasList ? this._listTemplate(_headersList) : undefined}
-    <paper-dialog id="headerInfo">
-      <h2>${_hdTitle}</h2>
-      <paper-dialog-scrollable>
-        <section class="dialog-header-desc">${_hdBody}</section>
-        <section class="dialog-header-example">
-          <span>Example:</span>
-          <span>${_hdExample}</span>
-        </section>
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-confirm autofocus>Close</paper-button>
-      </div>
-    </paper-dialog>`;
+    ${hasList ? this._listTemplate(_headersList) : undefined}`;
   }
 
   static get properties() {
@@ -139,18 +123,6 @@ class HeadersListView extends HeadersParserMixin(LitElement) {
        * information to be set.
        */
       type: { type: String },
-      /**
-       * Header title in the details dialog.
-       */
-      _hdTitle: { type: String },
-      /**
-       * Header description in the details dialog.
-       */
-      _hdBody: { type: String },
-      /**
-       * Header example in the details dialog.
-       */
-      _hdExample: { type: String },
       /**
        * A regexp used to match links in headers string.
        *
@@ -193,77 +165,6 @@ class HeadersListView extends HeadersParserMixin(LitElement) {
     const list = this.headersToJSON(headers);
     this._headersList = list;
   }
-  /**
-   * Double click on header line handler.
-   * Will call model for data to display.
-   *
-   * @param {CustomEvent} e
-   */
-  _displayHeaderInfo(e) {
-    const path = e.composedPath();
-    let target;
-    const test = true;
-    while (test) {
-      target = path.shift();
-      if (!target) {
-        return;
-      }
-      if (!target.dataset || !target.dataset.name) {
-        continue;
-      }
-      break;
-    }
-    const header = target.dataset.name.toLowerCase();
-    const headers = this._headersQueryEvent(header).headers;
-    if (headers && headers.length) {
-      const result = headers[0];
-      this._hdTitle = result.key;
-      this._hdBody = result.desc;
-      this._hdExample = result.example;
-      const node = this.shadowRoot.querySelector('paper-dialog');
-      node.opened = true;
-    }
-    this._analyticsEvent('Headers list', 'Display header info dialog');
-  }
-  /**
-   * Dispatches `query-headers` custom event handled by `arc-definitions`
-   * component.
-   *
-   * @param {String} header Header name to query
-   * @return {Object} Event's detail object
-   */
-  _headersQueryEvent(header) {
-    const ev = new CustomEvent('query-headers', {
-      detail: {
-        type: this.type,
-        query: header
-      },
-      bubbles: true,
-      composed: true,
-      cancelable: true
-    });
-    this.dispatchEvent(ev);
-    return ev.detail;
-  }
-  /**
-   * Dispatches analytics event.
-   * @param {String} action Event action
-   * @param {String} label Event label
-   */
-  _analyticsEvent(action, label) {
-    const e = new CustomEvent('send-analytics', {
-      detail: {
-        type: 'event',
-        category: HeadersListView.is,
-        action: action,
-        label: label
-      },
-      bubbles: true,
-      composed: true
-    });
-    this.dispatchEvent(e);
-  }
-
   // Finds URLs in input string and adds anchors tags.
   _autoLink(input) {
     if (typeof input !== 'string') {

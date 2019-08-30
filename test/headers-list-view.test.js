@@ -1,24 +1,10 @@
 import { fixture, assert, nextFrame } from '@open-wc/testing';
-import sinon from 'sinon/pkg/sinon-esm.js';
-import { middleOfNode, makeMouseEvent } from '@polymer/iron-test-helpers/mock-interactions.js';
-import '@advanced-rest-client/arc-definitions/arc-definitions.js';
+import * as sinon from 'sinon/pkg/sinon-esm.js';
 import '../headers-list-view.js';
-
-import { chai } from '@bundled-es-modules/chai';
-import { chaiDomDiff } from '@open-wc/semantic-dom-diff';
-
-chai.use(chaiDomDiff);
 
 describe('<headers-list-view>', function() {
   async function basicFixture() {
     return (await fixture(`<headers-list-view></headers-list-view>`));
-  }
-
-  async function definitionsFixture() {
-    return (await fixture(`<div>
-        <headers-list-view></headers-list-view>
-        <arc-definitions></arc-definitions>
-      </div>`));
   }
 
   describe('hetters and setters', () => {
@@ -58,55 +44,6 @@ describe('<headers-list-view>', function() {
       assert.lengthOf(element._headersList, 1);
       element.headers = undefined;
       assert.isUndefined(element._headersList);
-    });
-  });
-
-  describe('_displayHeaderInfo()', () => {
-    let element;
-    beforeEach(async () => {
-      const region = await definitionsFixture();
-      element = region.querySelector('headers-list-view');
-      element.headers = 'content-type: application/json\nx-test: true';
-      await nextFrame();
-    });
-
-    it('opens header dialog', () => {
-      const item = element.shadowRoot.querySelector('.container .list-item');
-      const xy = middleOfNode(item);
-      makeMouseEvent('dblclick', xy, item);
-
-      const node = element.shadowRoot.querySelector('paper-dialog');
-      assert.isTrue(node.opened);
-    });
-
-    it('won\'t open header dialog for unknown header', () => {
-      const item = element.shadowRoot.querySelectorAll('.container .list-item')[1];
-      const xy = middleOfNode(item);
-      makeMouseEvent('dblclick', xy, item);
-
-      const node = element.shadowRoot.querySelector('paper-dialog');
-      assert.isFalse(node.opened);
-    });
-
-    it('dispatches query-headers event', function() {
-      const spy = sinon.spy();
-      element.addEventListener('query-headers', spy);
-      const item = element.shadowRoot.querySelector('.container .list-item');
-      const xy = middleOfNode(item);
-      makeMouseEvent('dblclick', xy, item);
-
-      const result = spy.args[0][0].detail;
-      assert.equal(result.query, 'content-type');
-      assert.equal(result.type, 'response');
-    });
-
-    it('ignores double clik on unknown item', () => {
-      const spy = sinon.spy();
-      element.addEventListener('query-headers', spy);
-      const item = element.shadowRoot.querySelector('.container');
-      const xy = middleOfNode(item);
-      makeMouseEvent('dblclick', xy, item);
-      assert.isFalse(spy.called);
     });
   });
 
