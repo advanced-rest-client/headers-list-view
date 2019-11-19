@@ -49,7 +49,7 @@ import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/h
  * @memberof UiElements
  */
 class HeadersListView extends HeadersParserMixin(LitElement) {
-  static get styles() {
+  get styles() {
     return css`:host {
       display: block;
       font-size: var(--arc-font-body1-font-size);
@@ -99,7 +99,7 @@ class HeadersListView extends HeadersParserMixin(LitElement) {
   render() {
     const { _headersList } = this;
     const hasList = !!(_headersList && _headersList.length);
-    return html`
+    return html`<style>${this.styles}</style>
     ${hasList ? this._listTemplate(_headersList) : undefined}`;
   }
 
