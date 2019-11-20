@@ -1,7 +1,7 @@
 {
   "name": "@advanced-rest-client/headers-list-view",
   "description": "An element that displays a list of headers",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "license": "Apache-2.0",
   "main": "headers-list-view.js",
   "keywords": [
