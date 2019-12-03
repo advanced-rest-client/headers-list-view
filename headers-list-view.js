@@ -100,7 +100,7 @@ class HeadersListView extends HeadersParserMixin(LitElement) {
     const { _headersList } = this;
     const hasList = !!(_headersList && _headersList.length);
     return html`<style>${this.styles}</style>
-    ${hasList ? this._listTemplate(_headersList) : undefined}`;
+    ${hasList ? this._listTemplate(_headersList) : ''}`;
   }
 
   static get properties() {
