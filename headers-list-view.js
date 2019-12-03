@@ -43,7 +43,6 @@ import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/h
  * `--arc-link` | Mixin applied to a link | `{}`
  *
  * @customElement
- * @polymer
  * @demo demo/index.html
  * @appliesMixin HeadersParserMixin
  * @memberof UiElements
