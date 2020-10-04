@@ -4,6 +4,8 @@
 
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/headers-list-view)
 
+This component is deprecated. Use `@advanced-rest-client/arc-headers` instead.
+
 # headers-list-view
 
 An element that displays a list of headers.
